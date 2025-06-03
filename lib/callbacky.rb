@@ -21,16 +21,16 @@ module Callbacky
 
         define_method("callbacky_#{event}") do |obj, &block|
           before_kallbacks = instance_variable_get(:@before_kallbacks)
-          before_kallbacks.each { it.is_a?(Proc) ? it.call(obj) : obj.send(it) } if before_kallbacks
+          before_kallbacks.each { |it| it.is_a?(Proc) ? it.call(obj) : obj.send(it) } if before_kallbacks
           yield if block
           after_kallbacks = instance_variable_get(:@after_kallbacks)
-          after_kallbacks.each { it.is_a?(Proc) ? it.call(obj) : obj.send(it) } if after_kallbacks
+          after_kallbacks.each { |it| it.is_a?(Proc) ? it.call(obj) : obj.send(it) } if after_kallbacks
         end
       end
     end
   end
 
-  VALID_LIFECYCLES.each do
+  VALID_LIFECYCLES.each do |it|
     define_callback(it)
   end
 end

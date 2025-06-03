@@ -20,7 +20,7 @@
           };
 
           packages = with pkgs; [
-            ruby_3_4
+            ruby_3_1
           ];
 
           shellHook = ''
