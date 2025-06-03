@@ -25,56 +25,56 @@ gem install callbacky
 
 ## Usage
 
-### 1. Extend `Callbacky` in your class
+### 1. Include `Callbacky` in your class
 ```ruby
 class MyService
-  class << self
-    extend Callbacky
-
-    callbacky_after :init
-  end
+  include Callbacky
 end
 ```
-### 2. Define a callback
+### 2. Define callbacks
 
 ***Using method name:***
 ```ruby
 class MyService
-  callbacky_after_init :handle_after_init
+  include Callbacky
 
-  def handle_after_init
-    puts "After init"
-  end
-end
-```
+  callbacky :before, :init, :prepare_context
+  callbacky :after, :init, ->(obj) { obj.log_init }
 
-***Using a lambda or proc:***
-```ruby
-class MyService
-  callbacky_after_init ->(obj) { obj.log_event }
-end
-```
-
-***Using a block:***
-```ruby
-class MyService
-  callbacky_after_init do |instance|
+  callbacky :after, :init do |instance|
     instance.send_metrics
   end
+
+  def prepare_context
+    puts "Preparing context"
+  end
+
+  def log_init
+    puts "Logged init"
+  end
+
+  def send_metrics
+    puts "Sent metrics"
+  end
 end
+
 ```
 
 ### 3. Trigger the callback
 
 ```ruby
 class MyService
-  def initializer
-    ### callbacky_init will run before and after hooks
-    callbacky_init do |instance|
-      instance.do_some_other_things_inside
+  def initialize
+    callbacky_init
+      do_work
     end
   end
+
+  def do_work
+    puts "Doing the actual work"
+  end
 end
+
 ```
 
 ## Development
