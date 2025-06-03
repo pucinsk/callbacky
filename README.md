@@ -71,7 +71,7 @@ class MyService
   def initializer
     ### callbacky_init will run before and after hooks
     callbacky_init do |instance|
-      instance.send_metrics
+      instance.do_some_other_things_inside
     end
   end
 end
