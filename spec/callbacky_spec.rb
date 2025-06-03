@@ -6,7 +6,7 @@ RSpec.describe Callbacky do
       class << self
         extend Callbacky
 
-        after :init
+        callbacky_after :init
       end
 
       attr_reader :callback_handler
@@ -14,7 +14,7 @@ RSpec.describe Callbacky do
       def initialize(callback_handler:)
         @callback_handler = callback_handler
 
-        self.class.execute_init_callbacks(self)
+        self.class.callbacky_init(self)
       end
 
       def handle_after_init = callback_handler.handle_after_init
@@ -22,13 +22,13 @@ RSpec.describe Callbacky do
   end
 
   it "adds callback to given class" do
-    expect(klass).to respond_to(:after_init)
+    expect(klass).to respond_to(:callbacky_after_init)
   end
 
   context "when callback name is given" do
     let(:test_klass) do
       Class.new(klass) do
-        after_init :handle_after_init
+        callbacky_after_init :handle_after_init
       end
     end
 
@@ -42,7 +42,7 @@ RSpec.describe Callbacky do
   context "when callback as a Proc is given" do
     let(:test_klass) do
       Class.new(klass) do
-        after_init ->(obj) { obj.handle_after_init }
+        callbacky_after_init ->(obj) { obj.handle_after_init }
       end
     end
 
@@ -56,7 +56,7 @@ RSpec.describe Callbacky do
   context "when callback as a block is given" do
     let(:test_klass) do
       Class.new(klass) do
-        after_init(&:handle_after_init)
+        callbacky_after_init(&:handle_after_init)
       end
     end
 

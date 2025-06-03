@@ -11,15 +11,15 @@ module Callbacky
               "Valid life cycles are: #{VALID_LIFECYCLES}. #{lifecycle_event} was passed"
       end
 
-      define_method(lifecycle_event) do |event|
-        define_method("#{lifecycle_event}_#{event}") do |callback_method_or_block = nil, &block|
+      define_method("callbacky_#{lifecycle_event}") do |event|
+        define_method("callbacky_#{lifecycle_event}_#{event}") do |callback_method_or_block = nil, &block|
           kallbacks = instance_variable_get("@#{lifecycle_event}_kallbacks") || []
           kallbacks << callback_method_or_block if callback_method_or_block
           kallbacks << block if block
           instance_variable_set("@#{lifecycle_event}_kallbacks", kallbacks)
         end
 
-        define_method("execute_#{event}_callbacks") do |obj, &block|
+        define_method("callbacky_#{event}") do |obj, &block|
           before_kallbacks = instance_variable_get(:@before_kallbacks)
           before_kallbacks.each { it.is_a?(Proc) ? it.call(obj) : obj.send(it) } if before_kallbacks
           yield if block

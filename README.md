@@ -1,28 +1,81 @@
 # Callbacky
 
-TODO: Delete this and the text below, and describe your gem
+**Callbacky** is a lightweight Ruby gem that allows you to define and run custom lifecycle callbacks like `before` and `after` in a clean, expressive way.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/callbacky`. To experiment with that code, run `bin/console` for an interactive prompt.
+## ✨ Features
+
+- Define custom `before_*` and `after_*` hooks
+- Supports callbacks as method names, lambdas, or blocks
+- Declarative syntax inspired by Rails
+- Easily extensible for any lifecycle events in your application
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem "callbacky"
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Or install manually:
 
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```sh
+gem install callbacky
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+### 1. Extend `Callbacky` in your class
+```ruby
+class MyService
+  class << self
+    extend Callbacky
+
+    callbacky_after :init
+  end
+end
+```
+### 2. Define a callback
+
+***Using method name:***
+```ruby
+class MyService
+  callbacky_after_init :handle_after_init
+
+  def handle_after_init
+    puts "After init"
+  end
+end
+```
+
+***Using a lambda or proc:***
+```ruby
+class MyService
+  callbacky_after_init ->(obj) { obj.log_event }
+end
+```
+
+***Using a block:***
+```ruby
+class MyService
+  callbacky_after_init do |instance|
+    instance.send_metrics
+  end
+end
+```
+
+### 3. Trigger the callback
+
+```ruby
+class MyService
+  def initializer
+    ### callbacky_init will run before and after hooks
+    callbacky_init do |instance|
+      instance.send_metrics
+    end
+  end
+end
+```
 
 ## Development
 
